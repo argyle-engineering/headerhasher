@@ -1,0 +1,11 @@
+displayName: HeaderHasher Plugin
+type: middleware
+iconPath: .assets/icon.png
+
+import: github.com/argyle-engineering/headerhasher
+
+summary: 'HeaderHasher Traefik Middleware'
+
+testData:
+  inputHeader: 'Authorization'
+  outputHeader: 'Authorization-Hashed'
