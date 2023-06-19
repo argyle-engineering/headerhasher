@@ -33,7 +33,7 @@ type HeaderHasher struct {
 }
 
 // New creates a new HeaderHasher plugin.
-func New(_ context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+func New(_ context.Context, next http.Handler, config *Config, _ string) (http.Handler, error) {
 	if config.InputHeader == "" || config.OutputHeader == "" {
 		return nil, fmt.Errorf("inputHeader and outputHeader cannot be empty")
 	}
