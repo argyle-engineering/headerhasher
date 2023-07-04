@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"hash"
 	"net/http"
 )
 
@@ -29,7 +28,6 @@ type HeaderHasher struct {
 	inputHeader  string
 	outputHeader string
 	next         http.Handler
-	hasher       hash.Hash
 }
 
 // New creates a new HeaderHasher plugin.
@@ -42,16 +40,15 @@ func New(_ context.Context, next http.Handler, config *Config, _ string) (http.H
 		inputHeader:  config.InputHeader,
 		outputHeader: config.OutputHeader,
 		next:         next,
-		hasher:       sha256.New(),
 	}, nil
 }
 
 func (a *HeaderHasher) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	value := req.Header.Get(a.inputHeader)
 	if value != "" {
-		a.hasher.Write([]byte(value))
-		hashedValue := fmt.Sprintf("%x", a.hasher.Sum(nil))
-		a.hasher.Reset()
+		hasher := sha256.New()
+		hasher.Write([]byte(value))
+		hashedValue := fmt.Sprintf("%x", hasher.Sum(nil))
 
 		req.Header.Set(a.outputHeader, hashedValue)
 	}
